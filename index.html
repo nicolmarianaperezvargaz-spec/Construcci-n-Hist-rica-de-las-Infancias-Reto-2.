@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Construcción histórica de las infancias | UNAD</title>
+<style>
+:root{--primary:#214c7a;--secondary:#3f7cac;--accent:#f2b134;--light:#f5f8fb;--dark:#17324d;--white:#fff;--muted:#607487}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--light);color:#263746;line-height:1.6}
+header{background:linear-gradient(135deg,var(--primary),#122c48);color:white;padding:48px 20px;text-align:center} header h1{font-size:clamp(2rem,5vw,3.5rem);margin:0 0 10px} header p{max-width:850px;margin:auto;font-size:1.08rem}
+nav{position:sticky;top:0;z-index:20;background:white;box-shadow:0 2px 12px #0002;display:flex;flex-wrap:wrap;justify-content:center} nav a{padding:13px 15px;color:var(--dark);text-decoration:none;font-weight:bold;font-size:.93rem} nav a:hover{background:#e8f0f7;color:var(--primary)}
+main{max-width:1150px;margin:auto;padding:25px 18px 60px}.section{background:white;border-radius:18px;padding:30px;margin:24px 0;box-shadow:0 5px 20px #17324d12}.section h2{color:var(--primary);margin-top:0;font-size:1.9rem}.section h3{color:var(--secondary)}
+.hero-grid,.cards,.refs,.members{display:grid;gap:18px}.hero-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}.cards{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}.members{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}.refs{grid-template-columns:1fr}
+.card,.member,.era{background:#f8fbfd;border:1px solid #dce7ef;border-radius:14px;padding:20px}.card strong{color:var(--primary)}
+.member{text-align:center}.photo{width:110px;height:110px;border-radius:50%;margin:0 auto 12px;background:#dce7ef;display:flex;align-items:center;justify-content:center;color:#607487;font-weight:bold;font-size:.82rem}.member h3{margin:8px 0 3px;color:var(--primary)}
+.notice{border-left:5px solid var(--accent);background:#fff8e8;padding:15px 18px;border-radius:8px}.question{background:#edf5fb;border-radius:14px;padding:20px;border:1px solid #cfe0ed}.question h3{margin-top:0}
+.timeline{position:relative;margin:25px 0}.timeline:before{content:"";position:absolute;left:22px;top:0;bottom:0;width:4px;background:#bdd0df;border-radius:4px}.era{position:relative;margin:0 0 18px 55px;cursor:pointer;transition:.2s}.era:hover{transform:translateY(-2px);box-shadow:0 5px 15px #17324d18}.era:before{content:"";position:absolute;left:-44px;top:24px;width:20px;height:20px;background:var(--accent);border:4px solid white;box-shadow:0 0 0 2px #bdd0df;border-radius:50%}.era button{border:0;background:none;width:100%;text-align:left;font-size:1.2rem;font-weight:bold;color:var(--primary);cursor:pointer;padding:0}.era-content{display:none;padding-top:15px}.era.open .era-content{display:block}.tag{display:inline-block;padding:4px 9px;border-radius:20px;background:#e5eff7;color:var(--primary);font-size:.8rem;margin:3px}.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}.ref{padding:16px;border-left:4px solid var(--secondary);background:#f7fafc}.future{opacity:.8}.footer{background:#122c48;color:white;text-align:center;padding:28px 18px}.btn{display:inline-block;border:0;border-radius:10px;padding:11px 17px;background:var(--primary);color:white;font-weight:bold;cursor:pointer;text-decoration:none;margin-top:8px}.small{font-size:.9rem;color:var(--muted)} ul{padding-left:22px}
+@media print{nav,.btn{display:none!important}.section{box-shadow:none;break-inside:avoid}header{background:white;color:black}.era-content{display:block!important}.footer{color:black;background:white}}
+
+.admin-box{margin-top:22px;padding:20px;background:#f4f8fb;border:1px solid #cfe0ed;border-radius:14px}
+.admin-box label{display:block;font-weight:bold;color:var(--dark);margin:10px 0}
+.admin-box input,.admin-box textarea{display:block;width:100%;margin-top:6px;padding:11px;border:1px solid #b9cad8;border-radius:9px;font:inherit;background:white}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.form-grid .full{grid-column:1/-1}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn.danger{background:#a63d40}
+.btn.secondary{background:#607487}
+.status{padding:10px;border-radius:8px;background:#eaf5ea;margin-top:10px}
+.item-selected{outline:3px solid var(--accent)}
+@media(max-width:700px){.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}}
+
+
+.admin-toggle{width:100%;text-align:left;border:0;border-radius:10px;padding:12px 14px;background:#f7b6c8;color:#5a2435;font-weight:700;cursor:pointer;font-size:15px;margin-bottom:12px}
+.admin-toggle:hover{filter:brightness(.97)}
+.admin-box.collapsed{padding-bottom:12px}
+.admin-box.collapsed > :not(.admin-toggle){display:none}
+
+/* Diseño visual de línea de tiempo estilo Canva */
+.timeline{position:relative;max-width:1080px;margin:30px auto 24px;padding:8px 0 8px}
+.timeline:before{content:"";position:absolute;left:29px;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#7c3aed,#ec4899,#f59e0b);border-radius:20px}
+.era{position:relative;margin:0 0 24px 0;border:1px solid #eadcfb;border-radius:22px;background:#fff;box-shadow:0 8px 24px rgba(80,45,120,.09);overflow:hidden;transition:transform .2s,box-shadow .2s}
+.era:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(80,45,120,.14)}
+.era:before{content:"";position:absolute;left:17px;top:25px;width:28px;height:28px;border:5px solid #fff;border-radius:50%;background:#7c3aed;box-shadow:0 0 0 3px #c4b5fd;z-index:2}
+.era:nth-child(2):before{background:#ec4899;box-shadow:0 0 0 3px #f9a8d4}
+.era:nth-child(3):before{background:#f59e0b;box-shadow:0 0 0 3px #fcd34d}
+.era>button{display:flex;align-items:center;gap:12px;width:100%;padding:24px 26px 24px 68px;border:0;background:linear-gradient(100deg,#faf5ff,#fff1f7);color:#34204f;text-align:left;font-size:1.08rem;font-weight:800;cursor:pointer;position:relative}
+.era>button:after{content:"＋";margin-left:auto;font-size:1.4rem;color:#7c3aed}
+.era.open>button:after{content:"−"}
+.era-content{display:none;padding:0 30px 26px 68px;background:#fff}
+.era.open .era-content{display:block}
+.era-content p{line-height:1.75;color:#4b4257;margin:0 0 18px;white-space:normal}
+.era-content p br{content:"";display:block;margin:10px 0}
+.era-content .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.timeline-intro{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(100deg,#f5f3ff,#fff7fb);border:1px solid #eadcfb;border-radius:18px;padding:16px 18px;margin:18px 0 24px}
+.timeline-intro strong{color:#5b21b6}
+@media(max-width:650px){.timeline:before{left:22px}.era:before{left:10px}.era>button{padding:20px 18px 20px 52px;font-size:1rem}.era-content{padding:0 18px 22px 52px}}
+
+</style>
+</head>
+<body>
+<header id="inicio">
+  <h1>Construcción histórica de las infancias</h1>
+  <p>Página web – Reto 2 | Curso: <strong>Infancias: Historias y Perspectivas</strong> | Código 514517 | Universidad Nacional Abierta y a Distancia – UNAD</p>
+</header>
+<nav>
+  <a href="#inicio">Inicio</a><a href="#integrantes">Integrantes</a><a href="#reto2">Construcción histórica</a><a href="#linea">Línea de tiempo</a><a href="#referencias">Referencias</a><a href="#reto3">Infancias en perspectiva</a><a href="#reto4">Realidades y desafíos</a><a href="#reto5">Voces para la transformación</a>
+</nav>
+<main>
+<section class="section">
+<h2>Bienvenidos</h2>
+<p>Esta página web es el producto integrador que se irá construyendo progresivamente durante el curso. En este primer reto se presenta la construcción histórica de las concepciones de <strong>niño, niña, niñez, infancia e infancias</strong>, desde la Edad Antigua, la Edad Media y la Edad Moderna.</p>
+
+<div class="hero-grid">
+<div class="card"><strong>Propósito</strong><br>Comprender cómo las concepciones sobre las infancias han cambiado históricamente y cómo estas transformaciones aportan al reconocimiento de niños y niñas como sujetos de derechos.</div>
+<div class="card"><strong>Producto</strong><br>Página web con una línea de tiempo interactiva y las referencias bibliográficas utilizadas.</div>
+<div class="card"><strong>RAC 1</strong><br>Analizar las transformaciones históricas de los conceptos de niño, niña, niñez, infancia e infancias.</div>
+</div>
+</section>
+
+
+<section class="section" id="integrantes">
+<h2>Integrante del grupo</h2>
+<p>Esta sección permite ingresar, modificar y eliminar la información del integrante. Los cambios se guardan en este navegador.</p>
+<div id="memberList" class="members"></div>
+
+<div class="admin-box">
+  <button class="admin-toggle" type="button" onclick="toggleAdmin(this)" aria-expanded="false">▼ Administrar integrante — Mostrar / ocultar</button>
+<h3>Administrar integrante</h3>
+  <div class="form-grid">
+    <label>Nombre completo<input id="memberName" type="text" placeholder="Nombre completo"></label>
+    <label>Rol<input id="memberRole" type="text" placeholder="Rol"></label>
+    <label class="full">Descripción personal y académica<textarea id="memberBio" rows="4" placeholder="Descripción"></textarea></label>
+    <label class="full">Fotografía<input id="memberPhoto" type="file" accept="image/*"></label>
+  </div>
+  <div class="actions">
+    <button class="btn" type="button" onclick="addMember()">➕ Ingresar información</button>
+    <button class="btn" type="button" onclick="updateMember()">✏️ Modificar</button>
+    <button class="btn danger" type="button" onclick="deleteMember()">🗑️ Eliminar</button>
+    <button class="btn secondary" type="button" onclick="clearMemberForm()">Limpiar</button>
+  </div>
+  <p id="memberMsg" class="small"></p>
+</div>
+</section>
+
+<section class="section" id="reto2">
+<h2>Reto 2. Construcción histórica de las infancias</h2>
+<h3>¿Qué entendemos por niño, niña, niñez, infancia e infancias?</h3>
+<div class="cards">
+<div class="card"><strong>Niño y niña</strong><p>Son personas en una etapa de la vida que debe comprenderse dentro de su contexto social, cultural e histórico. La manera de entender sus capacidades, necesidades y participación ha cambiado con el tiempo.</p></div>
+<div class="card"><strong>Niñez</strong><p>Hace referencia a la etapa de la vida infantil, pero también puede analizarse como una construcción social que adquiere diferentes significados según el momento histórico y el contexto.</p></div>
+<div class="card"><strong>Infancia e infancias</strong><p>La infancia no puede entenderse como una experiencia única. El plural <strong>infancias</strong> permite reconocer que existen diversas formas de vivir, comprender y experimentar la niñez según las condiciones familiares, sociales, culturales e históricas.</p></div>
+</div>
+<div class="question" style="margin-top:22px"><h3>Pregunta orientadora</h3><p><strong>¿Qué diferencias existen entre ser niño o niña en distintos contextos sociales y cómo estas diferencias inciden en el reconocimiento de sus derechos y en sus posibilidades de participación y desarrollo?</strong></p><p>Ser niño o niña no significa vivir la misma experiencia en todos los lugares. Las condiciones familiares, sociales, económicas y culturales pueden influir en la educación, el cuidado, la participación y las oportunidades de desarrollo. Por eso es importante reconocer la diversidad de las infancias y evitar pensar que existe una sola manera de vivir la niñez. Desde un enfoque de derechos, niños y niñas deben ser reconocidos como sujetos con voz, dignidad y capacidades para participar en los asuntos que les afectan.</p></div>
+<h3>Reflexión personal</h3>
+<p>La infancia está relacionada con el contexto en el que cada persona crece. La familia, la comunidad, la cultura y las experiencias educativas influyen en la manera como se vive y se comprende la niñez. Al estudiar las transformaciones históricas, comprendemos que las ideas sobre los niños y las niñas no han sido siempre iguales. Por esta razón, como futuros educadores debemos reconocer sus diferencias, escuchar sus voces y promover ambientes donde sus derechos sean respetados.</p>
+
+<div class="admin-box">
+  <button class="admin-toggle" type="button" onclick="toggleAdmin(this)" aria-expanded="false">▼ Administrar contenido del Reto 2 — Mostrar / ocultar</button>
+<h3>Administrar contenido del Reto 2</h3>
+  <p class="small">Puedes ingresar información nueva, modificar el contenido editable o eliminarlo. La información se guarda en este navegador.</p>
+  <label>Título<input id="reto2Title" type="text" value="Reto 2. Construcción histórica de las infancias"></label>
+  <label>Contenido<textarea id="reto2Text" rows="6"></textarea></label>
+  <div class="actions">
+    <button class="btn" type="button" onclick="savePageContent('reto2')">➕ Ingresar información</button>
+    <button class="btn" type="button" onclick="modifyPageContent('reto2')">✏️ Modificar</button>
+    <button class="btn danger" type="button" onclick="deletePageContent('reto2')">🗑️ Eliminar</button>
+  </div>
+  <p id="reto2Msg" class="small"></p>
+</div>
+</section>
+
+<section class="section" id="linea">
+<h2>Línea de tiempo interactiva</h2>
+<p>Haz clic en cada etapa para ampliar la información. La guía solicita organizar cronológicamente la Edad Antigua, la Edad Media y la Edad Moderna, sus contextos, concepciones, autores, transformaciones y reflexión crítica.</p>
+<div class="timeline-intro"><span aria-hidden="true">✨</span><div><strong>Explora la historia de las infancias</strong><br>Selecciona cada tarjeta para abrir o cerrar su contenido. Encontrarás contexto, concepciones, hechos, autores, aportes y transformaciones históricas.</div></div><div class="timeline" id="timelineList"></div>
+<div class="question"><h3>Reflexión crítica</h3><p>Las concepciones sobre las infancias se han transformado junto con la sociedad. Comprender este proceso permite reconocer a los niños y las niñas como sujetos de derechos, escuchar sus voces, valorar sus capacidades y respetar la diversidad de sus contextos. La educación infantil debe promover participación, inclusión, protección y oportunidades de desarrollo.</p></div>
+<div class="admin-box collapsed">
+  <button class="admin-toggle" type="button" onclick="toggleAdmin(this)" aria-expanded="false">▼ Administrar línea de tiempo — Mostrar / ocultar</button>
+  <h3>Administrar línea de tiempo</h3>
+  <label>Seleccionar etapa para modificar o eliminar<select id="eraSelect"><option value="">Nueva etapa</option></select></label>
+  <label>Etapa<input id="eraTitle" type="text" placeholder="Ejemplo: Edad Antigua"></label>
+  <label>Información<textarea id="eraText" rows="5" placeholder="Escribe la información de la etapa"></textarea></label>
+  <div class="actions">
+    <button class="btn" type="button" onclick="addEra()">➕ Ingresar información</button>
+    <button class="btn" type="button" onclick="modifyEra()">✏️ Modificar</button>
+    <button class="btn danger" type="button" onclick="deleteEra()">🗑️ Eliminar</button>
+    <button class="btn secondary" type="button" onclick="clearEraForm()">Limpiar</button>
+  </div>
+  <p id="eraMsg" class="small"></p>
+</div>
+</section>
+
+<section class="section" id="referencias">
+<h2>Referencias bibliográficas</h2>
+<div class="refs">
+<div class="ref">Benchimol, K., Bidese, M., Gentile, M., Keserman, A., Juárez, M., Sokolowicz, A., Zapiola, M., Amado, G., &amp; Espínola, C. (2023). <em>Infancias en plural</em>. Sello Editorial Universidad Nacional General Sarmiento.</div>
+<div class="ref">Chica, F., &amp; Rasero, L. (2012). Construcción social de la infancia y el reconocimiento de sus competencias. <em>Itinerario Educativo, 26</em>(60), 75–96.</div>
+<div class="ref">Pedraza Ramírez, C. E., Morales Mantilla, S. M., Gómez Bohórquez, P. T., Rodríguez Bernal, Y., Pérez Ospina, J. M., &amp; Villamizar Parada, N. J. (2022). <em>Representaciones sobre la educación infantil: Infancias en contingencia</em>. Sello Editorial UNAD. https://doi.org/10.22490/9789586518710</div>
+</div>
+<p class="small"></p>
+
+<div class="admin-box">
+  <button class="admin-toggle" type="button" onclick="toggleAdmin(this)" aria-expanded="false">▼ Administrar referencias — Mostrar / ocultar</button>
+<h3>Administrar referencias</h3>
+  <label>Referencia bibliográfica<textarea id="refText" rows="4" placeholder="Escribe la referencia en formato APA 7"></textarea></label><input type="hidden" id="refIndex" value="">
+  <div class="actions">
+    <button class="btn" type="button" onclick="addReference()">➕ Ingresar información</button>
+    <button class="btn" type="button" onclick="modifyReference()">✏️ Modificar</button>
+    <button class="btn danger" type="button" onclick="deleteReference()">🗑️ Eliminar</button>
+  </div>
+  <p id="refMsg" class="small"></p>
+</div>
+</section>
+
+
+<section class="section future" id="reto3">
+<h2>Reto 3 — Infancias en perspectiva</h2>
+<p>Este espacio queda preparado para incorporar la información correspondiente cuando se desarrolle el reto.</p>
+<div id="reto3List" class="cards"></div>
+<div class="admin-box">
+  <button class="admin-toggle" type="button" onclick="toggleAdmin(this)" aria-expanded="false">▼ Administrar información — Mostrar / ocultar</button>
+<h3>Administrar información</h3>
+  <label>Título<input id="reto3Title" type="text" placeholder="Título de la información"></label>
+  <label>Contenido<textarea id="reto3Text" rows="6" placeholder="Escribe aquí la información de este reto"></textarea></label><input type="hidden" id="reto3Index" value="">
+  <div class="actions">
+    <button class="btn" type="button" onclick="addFuture('reto3')">➕ Ingresar información</button>
+    <button class="btn" type="button" onclick="modifyFuture('reto3')">✏️ Modificar</button>
+    <button class="btn danger" type="button" onclick="deleteFuture('reto3')">🗑️ Eliminar</button>
+  </div>
+  <p id="reto3Msg" class="small"></p>
+</div>
+</section>
+
+<section class="section future" id="reto4">
+<h2>Reto 4 — Comprendiendo las realidades y desafíos de las infancias</h2>
+<p>Este espacio queda preparado para incorporar la información correspondiente cuando se desarrolle el reto.</p>
+<div id="reto4List" class="cards"></div>
+<div class="admin-box">
+  <button class="admin-toggle" type="button" onclick="toggleAdmin(this)" aria-expanded="false">▼ Administrar información — Mostrar / ocultar</button>
+<h3>Administrar información</h3>
+  <label>Título<input id="reto4Title" type="text" placeholder="Título de la información"></label>
+  <label>Contenido<textarea id="reto4Text" rows="6" placeholder="Escribe aquí la información de este reto"></textarea></label><input type="hidden" id="reto4Index" value="">
+  <div class="actions">
+    <button class="btn" type="button" onclick="addFuture('reto4')">➕ Ingresar información</button>
+    <button class="btn" type="button" onclick="modifyFuture('reto4')">✏️ Modificar</button>
+    <button class="btn danger" type="button" onclick="deleteFuture('reto4')">🗑️ Eliminar</button>
+  </div>
+  <p id="reto4Msg" class="small"></p>
+</div>
+</section>
+
+<section class="section future" id="reto5">
+<h2>Reto 5 — Voces para la transformación de las infancias</h2>
+<p>Este espacio queda preparado para incorporar la información correspondiente cuando se desarrolle el reto.</p>
+<div id="reto5List" class="cards"></div>
+<div class="admin-box">
+  <button class="admin-toggle" type="button" onclick="toggleAdmin(this)" aria-expanded="false">▼ Administrar información — Mostrar / ocultar</button>
+<h3>Administrar información</h3>
+  <label>Título<input id="reto5Title" type="text" placeholder="Título de la información"></label>
+  <label>Contenido<textarea id="reto5Text" rows="6" placeholder="Escribe aquí la información de este reto"></textarea></label><input type="hidden" id="reto5Index" value="">
+  <div class="actions">
+    <button class="btn" type="button" onclick="addFuture('reto5')">➕ Ingresar información</button>
+    <button class="btn" type="button" onclick="modifyFuture('reto5')">✏️ Modificar</button>
+    <button class="btn danger" type="button" onclick="deleteFuture('reto5')">🗑️ Eliminar</button>
+  </div>
+  <p id="reto5Msg" class="small"></p>
+</div>
+</section>
+
+</main>
+<footer class="footer">UNAD · Infancias: Historias y Perspectivas · Reto 2 · Construcción histórica de las infancias</footer>
+
+<script>
+function toggleAdmin(btn){
+  const box=btn.closest('.admin-box');
+  const collapsed=box.classList.toggle('collapsed');
+  btn.setAttribute('aria-expanded',String(!collapsed));
+  const text=btn.textContent.replace(/^(▼|▲)\s*/,'');
+  btn.textContent=(collapsed?'▼ ':'▲ ')+text;
+}
+function toggleEra(btn){const era=btn.closest('.era');const open=era.classList.toggle('open');btn.setAttribute('aria-expanded',String(open))}
+const KEYS={member:'infancias_member_v4',reto2:'infancias_reto2_v4',reto3:'infancias_reto3_v4',reto4:'infancias_reto4_v4',reto5:'infancias_reto5_v4',eras:'infancias_eras_canva_v1',refs:'infancias_refs_v4'};
+function getJSON(key,fallback){try{const v=localStorage.getItem(key);return v?JSON.parse(v):fallback}catch(e){return fallback}}
+function setJSON(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){return false}}
+function msg(id,text){const el=document.getElementById(id);if(el)el.textContent=text}
+function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+
+/* Integrante: un solo integrante */
+function renderMember(){const list=document.getElementById('memberList');if(!list)return;const m=getJSON(KEYS.member,null);list.innerHTML=m?`<article class="card"><h3>${escapeHTML(m.name)}</h3><p><strong>Rol:</strong> ${escapeHTML(m.role)}</p><p>${escapeHTML(m.bio)}</p>${m.photo?`<img src="${m.photo}" alt="Fotografía del integrante" style="max-width:180px;border-radius:12px">`:''}</article>`:'<div class="card"><strong>No hay información ingresada.</strong></div>'}
+function readPhoto(file){return new Promise(resolve=>{if(!file){resolve('');return}const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>resolve('');r.readAsDataURL(file)})}
+async function addMember(){const name=memberName.value.trim(),role=memberRole.value.trim(),bio=memberBio.value.trim();if(!name||!role||!bio){msg('memberMsg','Complete nombre, rol y descripción.');return}const photo=await readPhoto(memberPhoto.files[0]);setJSON(KEYS.member,{name,role,bio,photo});renderMember();msg('memberMsg','Integrante ingresado correctamente.')}
+async function updateMember(){if(!getJSON(KEYS.member,null)){msg('memberMsg','Primero ingrese la información del integrante.');return}await addMember();msg('memberMsg','Integrante modificado correctamente.')}
+function deleteMember(){if(!getJSON(KEYS.member,null)){msg('memberMsg','No hay integrante para eliminar.');return}if(confirm('¿Desea eliminar el integrante?')){localStorage.removeItem(KEYS.member);renderMember();clearMemberForm();msg('memberMsg','Integrante eliminado correctamente.')}}
+function clearMemberForm(){memberName.value='';memberRole.value='';memberBio.value='';memberPhoto.value=''}
+
+/* Reto 2 */
+function pageTextFromCurrent(){return [...document.querySelectorAll('#reto2 > p,#reto2 .question p')].map(x=>x.innerText).join('\n\n')}
+function initReto2(){const saved=getJSON(KEYS.reto2,null);if(saved){reto2Title.value=saved.title||'';reto2Text.value=saved.text||''}else{reto2Text.value=pageTextFromCurrent()}}
+function savePageContent(){const title=reto2Title.value.trim(),text=reto2Text.value.trim();if(!title&&!text){msg('reto2Msg','Ingrese información antes de guardar.');return}setJSON(KEYS.reto2,{title,text});msg('reto2Msg','Información ingresada correctamente.')}
+function modifyPageContent(){if(!getJSON(KEYS.reto2,null)){msg('reto2Msg','Primero ingrese información.');return}savePageContent();msg('reto2Msg','Información modificada correctamente.')}
+function deletePageContent(){if(confirm('¿Eliminar la información administrada del Reto 2?')){localStorage.removeItem(KEYS.reto2);initReto2();msg('reto2Msg','Información eliminada. El contenido original de la página permanece.')}}
+
+/* Línea de tiempo: las tres etapas originales también se pueden modificar y eliminar */
+const defaultEras=[
+ {id:'base1',title:'🏺 Edad Antigua | Aproximadamente 3000 a. C. – 476 d. C.',text:`PERÍODO Y CONTEXTO
+Desde el surgimiento de la escritura hasta la caída del Imperio romano de Occidente. Las sociedades estaban organizadas mediante jerarquías familiares, políticas y económicas.
+
+CONCEPCIÓN DE NIÑO, NIÑA, NIÑEZ E INFANCIAS
+La niñez se comprendía principalmente como una etapa de preparación para la vida adulta. El trato, la educación y las posibilidades de participación dependían de la posición social, el género, la familia y la cultura. No todas las infancias eran vividas de la misma manera.
+
+HECHOS Y SITUACIONES IMPORTANTES
+• La familia y la comunidad definían gran parte de la formación infantil.
+• El acceso a la educación era desigual y estaba relacionado con la condición social.
+• Las costumbres y las leyes de cada sociedad influían en la protección y participación de los niños.
+
+AUTORES Y APORTES
+• Aristóteles reflexionó sobre la educación y la formación del ciudadano.
+• Quintiliano resaltó la importancia de la educación y del acompañamiento durante los primeros años.
+
+TRANSFORMACIÓN
+La educación infantil estaba relacionada con las expectativas de la sociedad. Este período permite comprender que la idea de infancia es histórica y cambia según el contexto.`},
+ {id:'base2',title:'🏰 Edad Media | Aproximadamente 476 – 1453',text:`PERÍODO Y CONTEXTO
+La vida social estuvo marcada por la religión, las familias, las comunidades y las relaciones jerárquicas. Las instituciones religiosas tuvieron una fuerte influencia en la educación y en la formación moral.
+
+CONCEPCIÓN DE NIÑO, NIÑA, NIÑEZ E INFANCIAS
+La infancia se interpretaba dentro del orden familiar, social y religioso. Las experiencias de los niños y las niñas eran diferentes según su familia, su condición económica, su género y el lugar que ocupaban en la sociedad.
+
+HECHOS Y SITUACIONES IMPORTANTES
+• La educación podía desarrollarse en la familia, en la comunidad o en instituciones religiosas.
+• La formación moral y religiosa ocupaba un lugar central.
+• El trabajo, las responsabilidades familiares y las condiciones sociales influían en la vida de los niños.
+
+AUTORES Y APORTES
+• Agustín de Hipona influyó en la reflexión cristiana sobre la persona, la moral y la formación espiritual.
+
+TRANSFORMACIÓN
+La infancia se comprendía dentro de un orden social y religioso. La autonomía y la participación infantil eran limitadas, y no existía una experiencia única de niñez.`},
+ {id:'base3',title:'📚 Edad Moderna | Aproximadamente 1453 – 1789',text:`PERÍODO Y CONTEXTO
+Se presentaron transformaciones sociales, científicas, económicas, políticas y culturales. El humanismo y el crecimiento de la escolarización fortalecieron la reflexión sobre la educación.
+
+CONCEPCIÓN DE NIÑO, NIÑA, NIÑEZ E INFANCIAS
+Se fue fortaleciendo la idea de que la niñez es una etapa propia del desarrollo, con necesidades, características y procesos de aprendizaje que deben ser acompañados.
+
+HECHOS Y SITUACIONES IMPORTANTES
+• El humanismo puso mayor atención en la formación de la persona.
+• La expansión de la escuela impulsó nuevas formas de organizar la enseñanza.
+• La educación comenzó a pensarse de acuerdo con las características y edades de los estudiantes.
+
+AUTORES Y APORTES
+• Juan Amós Comenio propuso una educación organizada y accesible, teniendo en cuenta las características de los estudiantes.
+• Jean-Jacques Rousseau defendió que la infancia debía comprenderse como una etapa propia, diferente de la adultez.
+
+TRANSFORMACIÓN
+Se avanzó hacia una mirada más diferenciada de la infancia. Sin embargo, continuaron las desigualdades por género, clase social y contexto familiar.`},
+ {id:'rights',title:'🌱 Puente hacia el enfoque actual de derechos',text:`REFLEXIÓN HISTÓRICA
+Al comparar las edades históricas, se observa que las ideas sobre los niños y las niñas no han sido iguales. Las condiciones sociales, culturales, económicas y familiares han influido en la forma de comprender la infancia.
+
+CAMBIO PRINCIPAL
+Se pasó de considerar a los niños principalmente como personas que debían obedecer y prepararse para la adultez, a reconocerlos progresivamente como personas con dignidad, capacidades, voz y derechos.
+
+IMPLICACIÓN EDUCATIVA
+Como futura licenciada en Pedagogía Infantil, considero que debemos escuchar a los niños y las niñas, respetar sus diferencias, promover su participación y construir ambientes seguros e inclusivos. Hablar de “infancias” en plural permite reconocer que cada niño vive su niñez de manera distinta según su cultura, familia, comunidad y condiciones de vida.`}
+];
+function timelineData(){const saved=getJSON(KEYS.eras,null);return Array.isArray(saved)?saved:defaultEras.map(x=>({...x}))}
+function renderTimeline(){const list=document.getElementById('timelineList');if(!list)return;const data=timelineData();list.innerHTML=data.map((x,i)=>{const safe=escapeHTML(x.text).replace(/\n/g,'<br>');return `<article class="era ${i===0?'open':''}"><button type="button" aria-expanded="${i===0?'true':'false'}" onclick="toggleEra(this)">${escapeHTML(x.title)}</button><div class="era-content"><p>${safe}</p><div class="actions"><button type="button" class="btn" onclick="chooseEra(${i})">✏️ Modificar</button><button type="button" class="btn danger" onclick="deleteEraAt(${i})">🗑️ Eliminar</button></div></div></article>`}).join('');fillEraSelect(data)}
+function fillEraSelect(data){const sel=document.getElementById('eraSelect');if(!sel)return;const current=sel.value;sel.innerHTML='<option value="">Nueva etapa</option>'+data.map((x,i)=>`<option value="${i}">${escapeHTML(x.title)}</option>`).join('');if([...sel.options].some(o=>o.value===current))sel.value=current}
+function chooseEra(i){const data=timelineData();if(!data[i])return;eraSelect.value=String(i);eraTitle.value=data[i].title;eraText.value=data[i].text;openAdmin('#linea');msg('eraMsg','Etapa cargada. Ahora puede modificarla o eliminarla.')}
+
+function addEra(){const title=eraTitle.value.trim(),text=eraText.value.trim();if(!title||!text){msg('eraMsg','Complete la etapa y la información.');return}const data=timelineData();data.push({id:'custom'+Date.now(),title,text});setJSON(KEYS.eras,data);renderTimeline();clearEraForm();msg('eraMsg','Etapa ingresada correctamente.')}
+function modifyEra(){const i=Number(eraSelect.value);if(eraSelect.value===''||!Number.isInteger(i)){msg('eraMsg','Seleccione una etapa para modificar.');return}const title=eraTitle.value.trim(),text=eraText.value.trim();const data=timelineData();if(!data[i]){msg('eraMsg','La etapa no existe.');return}if(!title||!text){msg('eraMsg','Complete los campos.');return}data[i]={...data[i],title,text};setJSON(KEYS.eras,data);renderTimeline();clearEraForm();msg('eraMsg','Etapa modificada correctamente.')}
+function deleteEra(){const i=Number(eraSelect.value);if(eraSelect.value===''||!Number.isInteger(i)){msg('eraMsg','Seleccione una etapa para eliminar.');return}deleteEraAt(i)}
+function deleteEraAt(i){const data=timelineData();if(!data[i])return;if(confirm('¿Desea eliminar esta etapa de la línea de tiempo?')){data.splice(i,1);setJSON(KEYS.eras,data);renderTimeline();clearEraForm();msg('eraMsg','Etapa eliminada correctamente.')}}
+function clearEraForm(){eraSelect.value='';eraTitle.value='';eraText.value=''}
+function openAdmin(selector){const box=document.querySelector(selector+' .admin-box');if(!box)return;box.classList.remove('collapsed');const b=box.querySelector('.admin-toggle');if(b){b.setAttribute('aria-expanded','true');b.textContent=b.textContent.replace(/^▼/,'▲')}}
+
+/* Bibliografía: CRUD de las referencias originales y nuevas */
+function initReferences(){let data=getJSON(KEYS.refs,null);if(!Array.isArray(data)){data=[...document.querySelectorAll('#referencias > .refs:first-of-type .ref')].map(x=>x.innerText.trim()).filter(Boolean);setJSON(KEYS.refs,data)}renderRefs()}
+function renderRefs(){const data=getJSON(KEYS.refs,[]);const original=document.querySelector('#referencias > .refs');if(original)original.style.display='none';let box=document.getElementById('addedRefs');if(!box){box=document.createElement('div');box.id='addedRefs';box.className='refs';(original||document.querySelector('#referencias h2')).after(box)}box.innerHTML=data.length?data.map((x,i)=>`<div class="ref"><p>${escapeHTML(x)}</p><div class="actions"><button type="button" class="btn" onclick="loadReference(${i})">✏️ Modificar</button><button type="button" class="btn danger" onclick="deleteReferenceAt(${i})">🗑️ Eliminar</button></div></div>`).join(''):'<div class="card"><strong>No hay referencias ingresadas.</strong></div>'}
+function addReference(){const x=refText.value.trim();if(!x){msg('refMsg','Ingrese una referencia.');return}const data=getJSON(KEYS.refs,[]);data.push(x);setJSON(KEYS.refs,data);renderRefs();clearReferenceForm();msg('refMsg','Referencia ingresada correctamente.')}
+function loadReference(i){const data=getJSON(KEYS.refs,[]);if(data[i]===undefined)return;refText.value=data[i];refIndex.value=String(i);openAdmin('#referencias');msg('refMsg','Referencia cargada. Pulse Modificar o Eliminar.')}
+function modifyReference(){const i=Number(refIndex.value);const data=getJSON(KEYS.refs,[]),x=refText.value.trim();if(refIndex.value===''||data[i]===undefined){msg('refMsg','Seleccione una referencia para modificar.');return}if(!x){msg('refMsg','Ingrese la referencia.');return}data[i]=x;setJSON(KEYS.refs,data);renderRefs();clearReferenceForm();msg('refMsg','Referencia modificada correctamente.')}
+function deleteReference(){const i=Number(refIndex.value);if(refIndex.value===''||getJSON(KEYS.refs,[])[i]===undefined){msg('refMsg','Seleccione una referencia para eliminar.');return}deleteReferenceAt(i)}
+function deleteReferenceAt(i){const data=getJSON(KEYS.refs,[]);if(data[i]===undefined)return;if(confirm('¿Desea eliminar esta referencia bibliográfica?')){data.splice(i,1);setJSON(KEYS.refs,data);renderRefs();clearReferenceForm();msg('refMsg','Referencia eliminada correctamente.')}}
+function clearReferenceForm(){refText.value='';refIndex.value=''}
+
+/* Retos 3, 4 y 5 */
+function renderFuture(id){const data=getJSON(KEYS[id],[]),list=document.getElementById(id+'List');if(!list)return;list.innerHTML=data.map((x,i)=>`<div class="card"><h3>${escapeHTML(x.title)}</h3><p>${escapeHTML(x.text).replace(/\n/g,'<br>')}</p><div class="actions"><button type="button" class="btn" onclick="loadFuture('${id}',${i})">✏️ Modificar</button><button type="button" class="btn danger" onclick="deleteFutureAt('${id}',${i})">🗑️ Eliminar</button></div></div>`).join('')||''}
+function addFuture(id){const title=document.getElementById(id+'Title').value.trim(),text=document.getElementById(id+'Text').value.trim();if(!title&&!text){msg(id+'Msg','Ingrese información antes de guardar.');return}const data=getJSON(KEYS[id],[]);data.push({title,text});setJSON(KEYS[id],data);renderFuture(id);clearFuture(id);msg(id+'Msg','Información ingresada correctamente.')}
+function loadFuture(id,i){const data=getJSON(KEYS[id],[]);if(!data[i])return;document.getElementById(id+'Title').value=data[i].title||'';document.getElementById(id+'Text').value=data[i].text||'';document.getElementById(id+'Index').value=String(i);openAdmin('#'+id);msg(id+'Msg','Información cargada. Pulse Modificar o Eliminar.')}
+function modifyFuture(id){const i=Number(document.getElementById(id+'Index').value),data=getJSON(KEYS[id],[]),title=document.getElementById(id+'Title').value.trim(),text=document.getElementById(id+'Text').value.trim();if(document.getElementById(id+'Index').value===''||!data[i]){msg(id+'Msg','Seleccione información para modificar.');return}if(!title&&!text){msg(id+'Msg','Ingrese información.');return}data[i]={title,text};setJSON(KEYS[id],data);renderFuture(id);clearFuture(id);msg(id+'Msg','Información modificada correctamente.')}
+function deleteFuture(id){const i=Number(document.getElementById(id+'Index').value);if(document.getElementById(id+'Index').value===''||!getJSON(KEYS[id],[])[i]){msg(id+'Msg','Seleccione información para eliminar.');return}deleteFutureAt(id,i)}
+function deleteFutureAt(id,i){const data=getJSON(KEYS[id],[]);if(!data[i])return;if(confirm('¿Desea eliminar esta información?')){data.splice(i,1);setJSON(KEYS[id],data);renderFuture(id);clearFuture(id);msg(id+'Msg','Información eliminada correctamente.')}}
+function clearFuture(id){document.getElementById(id+'Title').value='';document.getElementById(id+'Text').value='';document.getElementById(id+'Index').value=''}
+
+document.addEventListener('DOMContentLoaded',()=>{const sel=document.getElementById('eraSelect');if(sel)sel.addEventListener('change',()=>{const i=sel.value;if(i===''){clearEraForm();return}chooseEra(Number(i))});renderMember();initReto2();renderTimeline();initReferences();['reto3','reto4','reto5'].forEach(renderFuture)});
+</script>
+
+</body>
+</html>
